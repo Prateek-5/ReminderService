@@ -2,17 +2,22 @@ const express=require('express');
 
 const bodyParser= require('body-parser');
 const {PORT}=require('./config/serverConfig');
-const {sendBasicEmail}=require('./services/email-service');
+const {sendBasicEmail,subscribeEvents}=require('./services/email-service');
 const cron=require('node-cron');
 const TicketController=require('./controller/ticket-controller');
 const {EMAIL_ID,EMAIL_PASSWORD}=require('./config/serverConfig')
+const {createChannel,subscribeMessage}=require('./utils/messageQueue');
+const {REMINDER_BINDING_KEY}=require('./config/serverConfig')
+const jobs=require('./utils/jobs');
 
-
-const setupAndStartServer =() =>{
+const setupAndStartServer =async () =>{
     const app=express();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
-    const jobs=require('./utils/jobs');
+    
+    const channel= await createChannel();
+    subscribeMessage(channel,subscribeEvents,REMINDER_BINDING_KEY);
+
 
     app.post('/api/v1/tickets',TicketController.create);
 
@@ -27,7 +32,7 @@ const setupAndStartServer =() =>{
         //     'Hey, how are you , I hope you like the support',
 
         // );
-        jobs();
+        //jobs();
 
         
     })
