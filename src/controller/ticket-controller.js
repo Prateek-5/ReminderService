@@ -12,7 +12,7 @@ const create= async (req ,res)=>{
             message: 'Successfully registered an email reminder'
         })
     } catch (error) {
-        console.log(error);
+        console.log(error,'This is an error for incorrect data');
         return res.status(500).json({
             success: false,
             data: response,

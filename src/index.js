@@ -32,7 +32,7 @@ const setupAndStartServer =async () =>{
         //     'Hey, how are you , I hope you like the support',
 
         // );
-        //jobs();
+        jobs();
 
         
     })
